@@ -54,8 +54,8 @@ def do_water():
 	current_water_level = get_water()
 	num_water = num_items(Items.Water)
 
-	if num_water > 2 and current_water_level < 0.25:
-		use_item(Items.Water, 3)
+	if num_water > 1 and current_water_level < 0.5:
+		use_item(Items.Water, 2)
 
 def harvest_hay():
 	world_size = get_world_size()

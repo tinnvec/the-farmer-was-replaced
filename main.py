@@ -1,5 +1,40 @@
 from __builtins__ import *
 
+def move_to(x, y):
+	world_size = get_world_size()
+
+	current_x = get_pos_x()
+	current_y = get_pos_y()
+	
+	if x > current_x:
+		x_dir = 1
+	else:
+		x_dir = -1
+	if abs(x - current_x) > world_size / 2:
+		x_dir *= -1
+
+	if x_dir > 0:
+		x_dir = East
+	else:
+		x_dir = West
+	
+	if y > current_y:
+		y_dir = 1
+	else:
+		y_dir = -1
+	if abs(y - current_y) > world_size / 2:
+		y_dir *= -1
+
+	if y_dir > 0:
+		y_dir = North
+	else:
+		y_dir = South
+
+	while get_pos_x() != x:
+		move(x_dir)
+
+	while get_pos_y() != y:
+		move(y_dir)
 clear()
 
 num_hay = 0

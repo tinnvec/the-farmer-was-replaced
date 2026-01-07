@@ -51,10 +51,9 @@ def do_harvest():
 	harvest()
 
 def do_water():
-	current_water_level = get_water()
-	num_water = num_items(Items.Water)
-
-	if num_water > 1 and current_water_level < 0.5:
+	if num_items(Items.Water) > 1:
+		return
+	if get_water() < 0.5:
 		use_item(Items.Water, 2)
 
 def harvest_hay():
@@ -66,7 +65,6 @@ def harvest_hay():
 			do_harvest()
 			if get_ground_type() != Grounds.Grassland:
 				till()
-			do_water()
 			move(North)
 		move(East)
 
@@ -79,9 +77,9 @@ def harvest_wood():
 			do_harvest()
 			if (x + y) % 2 == 0:
 				plant(Entities.Tree)
+				do_water()
 			else:
 				plant(Entities.Bush)
-			do_water()
 			move(North)
 		move(East)
 
@@ -110,7 +108,6 @@ def harvest_pumpkins():
 			if get_ground_type() != Grounds.Soil:
 				till()
 			plant(Entities.Pumpkin)
-			do_water()
 			move(North)
 		move(East)
 	
@@ -155,7 +152,6 @@ def harvest_sunflowers():
 			plant(Entities.Sunflower)
 			petals = measure()
 			sunflowers[petals].append([x, y])
-			do_water()
 			move(North)
 		move(East)
 	

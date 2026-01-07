@@ -7,6 +7,7 @@ num_wood = 0
 num_carrots = 0
 
 num_water = 0
+num_fertilizer = 0
 
 current_ground_type = None
 current_water_level = 0
@@ -14,8 +15,15 @@ current_water_level = 0
 while True:
 	for x in range(get_world_size()):
 		for y in range(get_world_size()):
+			num_fertilizer = num_items(Items.Fertilizer)
+
 			while not can_harvest():
-				continue
+				if num_fertilizer > 0:
+					use_item(Items.Fertilizer)
+					num_fertilizer = num_items(Items.Fertilizer)
+				else:
+					continue
+
 			harvest()
 
 			current_ground_type = get_ground_type()

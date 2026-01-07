@@ -139,6 +139,31 @@ def harvest_pumpkins():
 	move_to(0, 0)
 	harvest()
 
+def harvest_sunflowers():
+	world_size = get_world_size()
+
+	sunflowers = {}
+	for p in range(15, 6, -1):
+		sunflowers[p] = []
+	
+	move_to(0, 0)
+	for x in range(world_size):
+		for y in range(world_size):
+			do_harvest()
+			if get_ground_type() != Grounds.Soil:
+				till()
+			plant(Entities.Sunflower)
+			petals = measure()
+			sunflowers[petals].append([x, y])
+			do_water()
+			move(North)
+		move(East)
+	
+	for p in range(15, 7, -1):
+		for l in sunflowers[p]:
+			move_to(l[0], l[1])
+			do_harvest()
+
 clear()
 
 num_hay = 0
@@ -153,17 +178,22 @@ current_water_level = 0
 
 while True:
 	world_size = get_world_size()
+	total_tiles = world_size ** 2
 
 	num_hay = num_items(Items.Hay)
 	num_wood = num_items(Items.Wood)
 	num_carrots = num_items(Items.Carrot)
+	num_power = num_items(Items.Power)
 	num_pumpkins = num_items(Items.Pumpkin)
 
-	if num_carrots > world_size ** 2 and num_hay > num_pumpkins and num_wood > num_pumpkins and num_carrots > num_pumpkins:
-		harvest_pumpkins()
-	elif num_hay / 4 > world_size ** 2 and num_wood / 4 > world_size ** 2 and num_hay > num_carrots and num_wood > num_carrots and num_pumpkins > num_carrots:
-		harvest_carrots()
-	elif num_hay > num_wood and num_carrots > num_wood and num_pumpkins > num_wood:
-		harvest_wood()
+	if num_carrots > total_tiles and num_power < total_tiles:
+		harvest_sunflowers()
 	else:
-		harvest_hay()
+		if num_carrots > total_tiles and num_hay > num_pumpkins and num_wood > num_pumpkins and num_carrots > num_pumpkins:
+			harvest_pumpkins()
+		elif num_hay / 4 > total_tiles and num_wood / 4 > total_tiles and num_hay > num_carrots and num_wood > num_carrots and num_pumpkins > num_carrots:
+			harvest_carrots()
+		elif num_hay > num_wood and num_carrots > num_wood and num_pumpkins > num_wood:
+			harvest_wood()
+		else:
+			harvest_hay()

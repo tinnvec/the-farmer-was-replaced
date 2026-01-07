@@ -160,6 +160,50 @@ def harvest_sunflowers():
 			move_to(l[0], l[1])
 			do_harvest()
 
+def harvest_cactus():
+	world_size = get_world_size()
+
+	move_to(0, 0)
+	for x in range(world_size):
+		for y in range(world_size):
+			do_harvest()
+			if get_ground_type() != Grounds.Soil:
+				till()
+			plant(Entities.Cactus)
+			move(North)
+		move(East)
+	
+	# Probably the worst way possible to sort. But hey we check 2 directions so we got that going for us
+	has_changed = True
+	while has_changed:
+		move_to(0, 0)
+		has_changed = False
+
+		for x in range(world_size):
+			for y in range(world_size):
+				current = measure()
+				above = measure(North)
+				if y != world_size - 1:
+					if current > above:
+						swap(North)
+						has_changed = True
+
+				if has_changed:
+					current = measure()
+				
+				right = measure(East)
+				if x != world_size - 1:
+					if current > right:
+						swap(East)
+						has_changed = True
+
+				move(North)
+			move(East)
+
+	move_to(0, 0)
+	harvest()
+		
+
 clear()
 
 num_hay = 0
@@ -181,15 +225,18 @@ while True:
 	num_carrots = num_items(Items.Carrot)
 	num_power = num_items(Items.Power)
 	num_pumpkins = num_items(Items.Pumpkin)
+	num_cactus = num_items(Items.Cactus)
 
 	if num_carrots > total_tiles and num_power < total_tiles:
 		harvest_sunflowers()
 	else:
-		if num_carrots > total_tiles and num_hay > num_pumpkins and num_wood > num_pumpkins and num_carrots > num_pumpkins:
+		if num_pumpkins / 4 > total_tiles and num_hay > num_cactus and num_wood > num_cactus and num_carrots > num_cactus and num_pumpkins > num_cactus:
+			harvest_cactus()
+		elif num_carrots > total_tiles and num_hay > num_pumpkins and num_wood > num_pumpkins and num_carrots > num_pumpkins and num_cactus > num_pumpkins:
 			harvest_pumpkins()
-		elif num_hay / 4 > total_tiles and num_wood / 4 > total_tiles and num_hay > num_carrots and num_wood > num_carrots and num_pumpkins > num_carrots:
+		elif num_hay / 4 > total_tiles and num_wood / 4 > total_tiles and num_hay > num_carrots and num_wood > num_carrots and num_pumpkins > num_carrots and num_cactus > num_carrots:
 			harvest_carrots()
-		elif num_hay > num_wood and num_carrots > num_wood and num_pumpkins > num_wood:
+		elif num_hay > num_wood and num_carrots > num_wood and num_pumpkins > num_wood and num_cactus > num_wood:
 			harvest_wood()
 		else:
 			harvest_hay()

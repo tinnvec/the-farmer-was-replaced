@@ -130,7 +130,10 @@ def harvest_pumpkins():
 		position = failed_plants.pop(0)
 		move_to(position[0], position[1])
 		if not can_harvest():
-			plant(Entities.Pumpkin)
+			if get_entity_type() != Entities.Dead_Pumpkin:
+				use_item(Items.Fertilizer)
+			else:
+				plant(Entities.Pumpkin)
 			failed_plants.append(position)
 	
 	move_to(0, 0)
